@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 
 class Emprendedor extends Model
 {
+    protected $table = 'emprendedores';
     protected $fillable = ['nombre', 'telefono', 'rubro'];
 
     public function ferias(): BelongsToMany
