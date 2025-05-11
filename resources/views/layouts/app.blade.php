@@ -10,10 +10,41 @@
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
         <link href="https://fonts.bunny.net/css?family=figtree:400,500,600&display=swap" rel="stylesheet" />
+        <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css" />
+
 
         <!-- Scripts -->
         @vite(['resources/css/app.css', 'resources/js/app.js'])
     </head>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            const emprendedoresSelect = document.getElementById('emprendedores');
+            if (emprendedoresSelect) {
+                new Choices(emprendedoresSelect, {
+                    removeItemButton: true,
+                    placeholder: true,
+                    placeholderValue: 'Seleccionar emprendedores...',
+                    noResultsText: 'No se encontró',
+                    itemSelectText: '',
+                });
+            }
+
+            const feriasSelect = document.getElementById('ferias');
+            if (feriasSelect) {
+                new Choices(feriasSelect, {
+                    removeItemButton: true,
+                    placeholder: true,
+                    placeholderValue: 'Seleccionar ferias...',
+                    noResultsText: 'No se encontró',
+                    itemSelectText: '',
+                });
+            }
+        });
+    </script>
+
+
+
     <body class="font-sans antialiased">
         <div class="min-h-screen bg-gray-100 dark:bg-gray-900">
             @include('layouts.navigation')

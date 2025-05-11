@@ -4,6 +4,8 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Emprendedor;
+use App\Models\Feria;
+
 
 class EmprendedorController extends Controller
 {
@@ -27,7 +29,8 @@ class EmprendedorController extends Controller
     public function create()
     {
         //
-        return view('emprendedores.create');
+        $ferias = Feria::all();
+        return view('emprendedores.create', compact('ferias'));
     }
 
     /**
@@ -42,8 +45,11 @@ class EmprendedorController extends Controller
                 'nombre' => 'required|string|max:255',
                 'telefono' => 'nullable|string',
                 'rubro' => 'nullable|string',
+                'ferias' => 'nullable|array',
+                'ferias.*' => 'exists:ferias,id',
             ]);
-            Emprendedor::create($request->all());
+            $emprendedor = Emprendedor::create($request->only(['nombre', 'telefono', 'rubro']));
+            $emprendedor->ferias()->sync($request->input('ferias', []));
 
             return redirect()->route('emprendedores.index')->with('success', 'Emprendedor created successfully.');
         } catch (\Exception $e) {
@@ -72,8 +78,10 @@ class EmprendedorController extends Controller
     {
         //
         try{
-            $emprendedor = Emprendedor::findOrFail($id);
-            return view('emprendedores.edit', compact('emprendedor'));
+            $emprendedor = Emprendedor::with('ferias')->findOrFail($id);
+            $ferias = Feria::all();
+
+            return view('emprendedores.edit', compact('emprendedor', 'ferias'));
         } catch (\Exception $e) {
             return response()->json(['error' => 'Emprendedor not found: ' . $e->getMessage()], 404);
         }
@@ -90,10 +98,14 @@ class EmprendedorController extends Controller
                 'nombre' => 'required|string|max:255',
                 'telefono' => 'nullable|string',
                 'rubro' => 'nullable|string',
+                'ferias' => 'nullable|array',
+                'ferias.*' => 'exists:ferias,id',
             ]);
 
             $emprendedor = Emprendedor::findOrFail($id);
-            $emprendedor->update($request->all());
+            $emprendedor->update($request->only(['nombre', 'telefono', 'rubro']));
+
+            $emprendedor->ferias()->sync($request->input('ferias', []));
             return redirect()->route('emprendedores.index')->with('success', 'Emprendedor updated successfully.');
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to update emprendedor: ' . $e->getMessage()], 500);
