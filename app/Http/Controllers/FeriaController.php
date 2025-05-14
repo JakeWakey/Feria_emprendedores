@@ -4,8 +4,6 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Feria;
-use App\Models\Emprendedor;
-
 
 class FeriaController extends Controller
 {
@@ -29,8 +27,7 @@ class FeriaController extends Controller
     public function create()
     {
         //
-        $emprendedores = Emprendedor::all();
-        return view('ferias.create', compact('emprendedores'));
+        return view('ferias.create');
     }
 
     /**
@@ -46,14 +43,9 @@ class FeriaController extends Controller
                 'description' => 'nullable|string',
                 'fecha_evento' => 'nullable|string',
                 'lugar' => 'nullable|string',
-                'emprendedores' => 'nullable|array',
-                'emprendedores.*' => 'exists:emprendedores,id',
             ]);
 
-            $feria = Feria::create($request->only(['nombre', 'descripcion', 'fecha_evento', 'lugar']));
-
-            $feria->emprendedores()->sync($request->input('emprendedores', []));
-
+            Feria::create($request->all());
 
             return redirect()->route('ferias.index')->with('success', 'Feria created successfully.');
         } catch (\Exception $e) {
@@ -79,27 +71,21 @@ class FeriaController extends Controller
      * Show the form for editing the specified resource.
      */
     public function edit(string $id)
-{
-    try {
-        $feria = Feria::findOrFail($id);
-        $emprendedores = Emprendedor::all();
-
-        return view('ferias.edit', compact('feria', 'emprendedores'));
-    } catch (\Exception $e) {
-        return response()->json(['error' => 'Feria not found: ' . $e->getMessage()], 404);
+    {
+        //
+        try{
+            $feria = Feria::findOrFail($id);
+            return view('ferias.edit', compact('feria'));
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Feria not found: ' . $e->getMessage()], 404);
+        }
     }
-}
 
     /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, string $id)
     {
-        $request->merge([
-            'emprendedores' => array_filter($request->input('emprendedores', []), function ($id) {
-                return $id !== '__none__';
-            })
-        ]);
         try{
 
 
@@ -108,14 +94,10 @@ class FeriaController extends Controller
                 'description' => 'nullable|string',
                 'fecha_evento' => 'nullable|string',
                 'lugar' => 'nullable|string',
-                'emprendedores' => 'nullable|array',
-                'emprendedores.*' => 'exists:emprendedores,id',
             ]);
 
             $feria = Feria::findOrFail($id);
-            $feria->update($request->only(['nombre', 'descripcion', 'fecha_evento', 'lugar']));
-            $feria->emprendedores()->sync($request->input('emprendedores', []));
-
+            $feria->update($request->all());
             return redirect()->route('ferias.index')->with('success', 'Feria updated successfully.');
         } catch (\Exception $e) {
             return response()->json(['error' => 'Failed to update feria: ' . $e->getMessage()], 500);

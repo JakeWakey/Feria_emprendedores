@@ -9,7 +9,7 @@
         class="hover:bg-indigo-700 bg-indigo-600  text-gray-800 border-gray-800 dark:text-gray-200 dark:border-gray-200 rounded-lg p-2 transition-all"
         href="{{route('emprendedores.create')}}"
         >
-            {{ __('Nuevo Emprendedor') }}
+            {{ __('New Emprendedor') }}
         </a>
         </div>
     </x-slot>
@@ -22,17 +22,6 @@
                     <div class="p-4 flex flex-col gap-2">
                         <p class="font-bold">{{$emprendedor->nombre}}</p>
                         <p>{{$emprendedor->telefono}} - {{$emprendedor->rubro}}</p>
-                        @if($emprendedor->ferias->count())
-                            <div class="flex flex-wrap gap-2 mt-1">
-                                @foreach($emprendedor->ferias as $feria)
-                                    <span class="text-sm bg-indigo-200 text-indigo-900 px-2 py-1 rounded">
-                                        {{ $feria->nombre }}
-                                    </span>
-                                @endforeach
-                            </div>
-                        @else
-                            <p class="text-sm text-gray-400 italic">Sin ferias asignadas</p>
-                        @endif
                     </div>
                     <div class="flex flex-row gap-2">
                     <a
