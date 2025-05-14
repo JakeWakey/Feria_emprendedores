@@ -9,7 +9,7 @@
         class="hover:bg-indigo-700 bg-indigo-600  text-gray-800 border-gray-800 dark:text-gray-200 dark:border-gray-200 rounded-lg p-2 transition-all"
         href="{{route('ferias.create')}}"
         >
-            {{ __('New Feria') }}
+            {{ __('Nueva Feria') }}
         </a>
         </div>
     </x-slot>
